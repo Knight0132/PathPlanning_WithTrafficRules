@@ -1,0 +1,334 @@
+{
+    "CellSpaces": [
+        {
+            "id": "c1",
+            "node": "POINT(0.5 0.5)",
+            "space": "POLYGON((0 0, 1 0, 1 1, 0 1, 0 0))",
+            "properties": {
+                "navigable": true,
+                "functions": []
+            }
+        },
+        {
+            "id": "c2",
+            "node": "POINT(1.5 0.5)",
+            "space": "POLYGON((1 0, 2 0, 2 1, 1 1, 1 0))",
+            "properties": {
+                "navigable": true,
+                "functions": []
+            }
+        },
+        {
+            "id": "c3",
+            "node": "POINT(2.5 0.5)",
+            "space": "POLYGON((2 0, 3 0, 3 1, 2 1, 2 0))",
+            "properties": {
+                "navigable": true,
+                "functions": []
+            }
+        },
+        {
+            "id": "c4",
+            "node": "POINT(0.5 1.5)",
+            "space": "POLYGON((0 1, 1 1, 1 2, 0 2, 0 1))",
+            "properties": {
+                "navigable": true,
+                "functions": []
+            }
+        },
+        {
+            "id": "c5",
+            "node": "POINT(1.5 1.5)",
+            "space": "POLYGON((1 1, 2 1, 2 2, 1 2, 1 1))",
+            "properties": {
+                "navigable": true,
+                "functions": []
+            }
+        },
+        {
+            "id": "c6",
+            "node": "POINT(2.5 1.5)",
+            "space": "POLYGON((2 1, 3 1, 3 2, 2 2, 2 1))",
+            "properties": {
+                "navigable": true,
+                "functions": []
+            }
+        },
+        {
+            "id": "c7",
+            "node": "POINT(0.5 2.5)",
+            "space": "POLYGON((0 2, 1 2, 1 3, 0 3, 0 2))",
+            "properties": {
+                "navigable": true,
+                "functions": []
+            }
+        },
+        {
+            "id": "c8",
+            "node": "POINT(1.5 2.5)",
+            "space": "POLYGON((1 2, 2 2, 2 3, 1 3, 1 2))",
+            "properties": {
+                "navigable": true,
+                "functions": []
+            }
+        },
+        {
+            "id": "c9",
+            "node": "POINT(2.5 2.5)",
+            "space": "POLYGON((2 2, 3 2, 3 3, 2 3, 2 2))",
+            "properties": {
+                "navigable": true,
+                "functions": []
+            }
+        }
+    ],
+    "CellBoundaries": [
+        {
+            "id": "c1-c2",
+            "edge": "LINESTRING(0.5 0.5, 1.5 0.5)",
+            "boundary": "LINESTRING(1 0, 2 0)",
+            "source": "c1",
+            "target": "c2",
+            "properties": {
+                "type": "door"
+            }
+        },
+        {
+            "id": "c2-c3",
+            "edge": "LINESTRING(1.5 0.5, 2.5 0.5)",
+            "boundary": "LINESTRING(2 0, 3 0)",
+            "source": "c2",
+            "target": "c3",
+            "properties": {
+                "type": "door"
+            }
+        },
+        {
+            "id": "c1-c4",
+            "edge": "LINESTRING(0.5 0.5, 0.5 1.5)",
+            "boundary": "LINESTRING(1 0, 1 0)",
+            "source": "c1",
+            "target": "c4",
+            "properties": {
+                "type": "door"
+            }
+        },
+        {
+            "id": "c4-c5",
+            "edge": "LINESTRING(0.5 1.5, 1.5 1.5)",
+            "boundary": "LINESTRING(1 1, 2 1)",
+            "source": "c4",
+            "target": "c5",
+            "properties": {
+                "type": "door"
+            }
+        },
+        {
+            "id": "c2-c5",
+            "edge": "LINESTRING(1.5 0.5, 1.5 1.5)",
+            "boundary": "LINESTRING(2 0, 2 0)",
+            "source": "c2",
+            "target": "c5",
+            "properties": {
+                "type": "door"
+            }
+        },
+        {
+            "id": "c5-c6",
+            "edge": "LINESTRING(1.5 1.5, 2.5 1.5)",
+            "boundary": "LINESTRING(2 1, 3 1)",
+            "source": "c5",
+            "target": "c6",
+            "properties": {
+                "type": "door"
+            }
+        },
+        {
+            "id": "c3-c6",
+            "edge": "LINESTRING(2.5 0.5, 2.5 1.5)",
+            "boundary": "LINESTRING(3 0, 3 0)",
+            "source": "c3",
+            "target": "c6",
+            "properties": {
+                "type": "door"
+            }
+        },
+        {
+            "id": "c4-c7",
+            "edge": "LINESTRING(0.5 1.5, 0.5 2.5)",
+            "boundary": "LINESTRING(1 1, 1 1)",
+            "source": "c4",
+            "target": "c7",
+            "properties": {
+                "type": "door"
+            }
+        },
+        {
+            "id": "c7-c8",
+            "edge": "LINESTRING(0.5 2.5, 1.5 2.5)",
+            "boundary": "LINESTRING(1 2, 2 2)",
+            "source": "c7",
+            "target": "c8",
+            "properties": {
+                "type": "door"
+            }
+        },
+        {
+            "id": "c5-c8",
+            "edge": "LINESTRING(1.5 1.5, 1.5 2.5)",
+            "boundary": "LINESTRING(2 1, 2 1)",
+            "source": "c5",
+            "target": "c8",
+            "properties": {
+                "type": "door"
+            }
+        },
+        {
+            "id": "c8-c9",
+            "edge": "LINESTRING(1.5 2.5, 2.5 2.5)",
+            "boundary": "LINESTRING(2 2, 3 2)",
+            "source": "c8",
+            "target": "c9",
+            "properties": {
+                "type": "door"
+            }
+        },
+        {
+            "id": "c6-c9",
+            "edge": "LINESTRING(2.5 1.5, 2.5 2.5)",
+            "boundary": "LINESTRING(3 1, 3 1)",
+            "source": "c6",
+            "target": "c9",
+            "properties": {
+                "type": "door"
+            }
+        }
+    ],
+    "Layers": [
+        {
+            "id": "l1",
+            "cells": [
+                "c1",
+                "c2",
+                "c3",
+                "c4",
+                "c5",
+                "c6",
+                "c7",
+                "c8",
+                "c9"
+            ],
+            "properties": {
+                "type": "parking lot"
+            }
+        }
+    ],
+    "Containers": [
+        {
+            "id": "ct1",
+            "cell": "c1",
+            "source": [],
+            "target": [
+                "c1-c2",
+                "c1-c4"
+            ],
+            "limited": []
+        },
+        {
+            "id": "ct2",
+            "cell": "c2",
+            "source": [
+                "c1-c2"
+            ],
+            "target": [
+                "c2-c3",
+                "c2-c5"
+            ],
+            "limited": []
+        },
+        {
+            "id": "ct3",
+            "cell": "c3",
+            "source": [
+                "c2-c3"
+            ],
+            "target": [
+                "c3-c6"
+            ],
+            "limited": []
+        },
+        {
+            "id": "ct4",
+            "cell": "c4",
+            "source": [
+                "c1-c4"
+            ],
+            "target": [
+                "c4-c5",
+                "c4-c7"
+            ],
+            "limited": []
+        },
+        {
+            "id": "ct5",
+            "cell": "c5",
+            "source": [
+                "c4-c5",
+                "c2-c5"
+            ],
+            "target": [
+                "c5-c6",
+                "c5-c8"
+            ],
+            "limited": [
+                ["c4-c5",
+                "c5-c6"]
+            ]
+        },
+        {
+            "id": "ct6",
+            "cell": "c6",
+            "source": [
+                "c5-c6",
+                "c3-c6"
+            ],
+            "target": [
+                "c6-c9"
+            ],
+            "limited": []
+        },
+        {
+            "id": "ct7",
+            "cell": "c7",
+            "source": [
+                "c4-c7"
+            ],
+            "target": [
+                "c7-c8"
+            ],
+            "limited": []
+        },
+        {
+            "id": "ct8",
+            "cell": "c8",
+            "source": [
+                "c7-c8",
+                "c5-c8"
+            ],
+            "target": [
+                "c8-c9"
+            ],
+            "limited": []
+        },
+        {
+            "id": "ct9",
+            "cell": "c9",
+            "source": [
+                "c8-c9",
+                "c6-c9"
+            ],
+            "target": [],
+            "limited": []
+        }
+    ]
+}
