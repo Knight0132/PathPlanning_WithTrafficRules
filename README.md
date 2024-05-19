@@ -1,11 +1,10 @@
-# PathplanningWithTrafficRules
-The repository is for the Bachelor's degree thesis. It is about indoor map data structure considering some traffic rules.
+# Path Planning With Traffic Rules
+The repository is for the Bachelor's degree thesis. It is about indoor map data structure considering some traffic rules. This is a project which is the simulation of the pathplanning with traffic rules in the warehouse for robots. 
 
 ## Settings
-This is a project which is the simulation of the pathplanning with traffic rules in the warehouse for robots. 
-In this project, we use Unity3D to simulate the pathplanning.
+Platform: **Unity3D**
 
-The compiler version is 2021.3.32f1c1.
+The compiler version is **2021.3.32f1c1**.
 
 ## Algorithms
 In this project, we use the normal A* algorithm, and the improved A* algorithm to test our indoor map data structure. 
