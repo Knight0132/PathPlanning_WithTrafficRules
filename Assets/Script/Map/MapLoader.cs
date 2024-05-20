@@ -90,7 +90,7 @@ namespace Map {
             }
         }
 
-        public List<ConnectionPoint> CalculatePath(Vector3 start, Vector3 end)
+        public List<Tuple<ConnectionPoint, float>> CalculatePath(Vector3 start, Vector3 end)
         {
             RoutePoint startPoint = graph.GetRoutePointFromCoordinate(start, true);
             RoutePoint endPoint = graph.GetRoutePointFromCoordinate(end, true);
@@ -99,7 +99,7 @@ namespace Map {
             {
                 return PathPlanner.FindPath(selectedAlgorithm, graph, startPoint, endPoint, speed);
             }
-            return new List<ConnectionPoint>();
+            return new List<Tuple<ConnectionPoint, float>>();
         }
 
         public IndoorSpace LoadJson()

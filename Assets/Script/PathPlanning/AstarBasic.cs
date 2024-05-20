@@ -13,9 +13,9 @@ namespace PathPlanning
         public RoutePoint startPosition;
         public RoutePoint endPosition;
         public Graph graph;
-        public List<ConnectionPoint> path = new List<ConnectionPoint>();
+        public List<Tuple<ConnectionPoint, float>> path = new List<Tuple<ConnectionPoint, float>>();
 
-        public static List<ConnectionPoint> AstarAlgorithm_Basic(Graph graph, RoutePoint startPosition, RoutePoint endPosition, float currentSpeedFactor = 1.0f)
+        public static List<Tuple<ConnectionPoint, float>> AstarAlgorithm_Basic(Graph graph, RoutePoint startPosition, RoutePoint endPosition, float speed)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -52,7 +52,7 @@ namespace PathPlanning
                 {
                     stopwatch.Stop();
                     UnityEngine.Debug.Log("A* Algorithm Execution Time: " + stopwatch.ElapsedMilliseconds + "ms");
-                    return GetPath(previous, startPosition, endPosition);
+                    return GetPath(previous, startPosition, endPosition, speed);
                 }
                 openSet.Remove(current);
 
@@ -78,29 +78,29 @@ namespace PathPlanning
             }
 
             UnityEngine.Debug.Log("No path found");
-            return new List<ConnectionPoint>();
+            return new List<Tuple<ConnectionPoint, float>>();
         }
 
-        private static List<ConnectionPoint> GetPath(Dictionary<RoutePoint, RoutePoint> previous, RoutePoint startPosition, RoutePoint endPosition)
+        private static List<Tuple<ConnectionPoint, float>> GetPath(Dictionary<RoutePoint, RoutePoint> previous, RoutePoint startPosition, RoutePoint endPosition, float speed)
         {
-            List<ConnectionPoint> path = new List<ConnectionPoint>();
+            List<Tuple<ConnectionPoint, float>> path = new List<Tuple<ConnectionPoint, float>>();
 
             RoutePoint current = endPosition;
             while (current != null && current != startPosition)
             {
-                path.Add(current.ConnectionPoint);
+                path.Add(new Tuple<ConnectionPoint, float>(current.ConnectionPoint, speed));
                 current = previous[current];
             }
 
-            path.Add(startPosition.ConnectionPoint);
+            path.Add(new Tuple<ConnectionPoint, float>(startPosition.ConnectionPoint, speed));
             path.Reverse();
             path.RemoveAt(path.Count - 1);
             
             List<string> pathIds = new List<string>();
 
-            foreach (ConnectionPoint connectionPoint in path)
+            foreach (Tuple<ConnectionPoint, float> connectionPoint in path)
             {
-                pathIds.Add(connectionPoint.Id);
+                pathIds.Add(connectionPoint.Item1.Id);
             }
             UnityEngine.Debug.Log("Path: " + string.Join(" -> ", pathIds.ToArray()));
 

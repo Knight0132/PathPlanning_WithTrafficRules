@@ -13,14 +13,15 @@ namespace PathPlanning
         public RoutePoint startPosition;
         public RoutePoint endPosition;
         public Graph graph;
-        public List<ConnectionPoint> path = new List<ConnectionPoint>();
+        public List<Tuple<ConnectionPoint, float>> path = new List<Tuple<ConnectionPoint, float>>();
 
-        public static List<ConnectionPoint> AstarAlgorithm_TC(Graph graph, RoutePoint startPosition, RoutePoint endPosition, float speed, float currentSpeedFactor = 1.0f)
+        public static List<Tuple<ConnectionPoint, float>> AstarAlgorithm_TC(Graph graph, RoutePoint startPosition, RoutePoint endPosition, float speed)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
+            float lastSpeed = 0f;
             Dictionary<RoutePoint, float> g_score = new Dictionary<RoutePoint, float>();
-            Dictionary<RoutePoint, RoutePoint> previous = new Dictionary<RoutePoint, RoutePoint>();
+            Dictionary<RoutePoint, Tuple<RoutePoint, float>> previous = new Dictionary<RoutePoint, Tuple<RoutePoint, float>>();
             Dictionary<RoutePoint, float> h_score = new Dictionary<RoutePoint, float>();
             Dictionary<RoutePoint, float> f_score = new Dictionary<RoutePoint, float>();
             List<RoutePoint> openSet = new List<RoutePoint>();
@@ -28,7 +29,7 @@ namespace PathPlanning
             foreach (RoutePoint node in graph.RoutePoints)
             {
                 g_score[node] = Mathf.Infinity;
-                previous[node] = null;
+                previous[node] = new Tuple<RoutePoint, float>(null, 0f);
                 h_score[node] = hScore(node, endPosition, speed);
                 f_score[node] = Mathf.Infinity;
                 openSet.Add(node);
@@ -52,86 +53,94 @@ namespace PathPlanning
                 {
                     stopwatch.Stop();
                     UnityEngine.Debug.Log("A* Algorithm Execution Time: " + stopwatch.ElapsedMilliseconds + "ms");
-                    return GetPath(previous, startPosition, endPosition);
+                    return GetPath(previous, startPosition, endPosition, speed);
                 }
                 openSet.Remove(current);
 
                 foreach (ConnectionPoint neighbor in current.Children)
                 {
-                    bool sequence = true;
+                    bool sequence = false;
                     RoutePoint neighborNode = graph.GetRoutePointFormConnectionPoint(neighbor);
                     Layer layerOfNeighbor = graph.GetLayerFromConnectionPoint(neighbor, sequence);
+                    Layer layerCurrent = graph.GetLayerFromConnectionPoint(current.ConnectionPoint, sequence);
+                    
+                    float currentSpeed = speed;
                     
                     float distance = (float)current.ConnectionPoint.Point.Distance(neighbor.Point);
-                    float maxSpeed = speed;
-                    if (maxSpeed > layerOfNeighbor.SpeedLimit())
-                    {
-                        maxSpeed = layerOfNeighbor.SpeedLimit();
-                    }
-                    
-                    if (graph.NearIntersection(neighbor))
-                    {
-                        maxSpeed *= 0.5f;
 
-                        if (graph.InIntersection(neighbor))
-                        {
-                            maxSpeed *= 2.0f;
-                        }
-                    }
-
-                    if (graph.NearIntersection(current.ConnectionPoint, false))
+                    if (graph.InAisle(current.ConnectionPoint) && graph.InAisle(neighbor))
                     {
-                        maxSpeed = speed;
-                        if (maxSpeed > layerOfNeighbor.SpeedLimit())
-                        {
-                            maxSpeed = layerOfNeighbor.SpeedLimit();
-                        }
+                        currentSpeed = Mathf.Min(speed, layerOfNeighbor.SpeedLimit());
+                    }
+                    else if (graph.InAisle(current.ConnectionPoint) && graph.NearIntersection(neighbor))
+                    {
+                        float deaccelerationFactor = layerOfNeighbor.DeaccelerationFactor();
+                        currentSpeed *= deaccelerationFactor;
+                    }
+                    else if (graph.NearIntersection(current.ConnectionPoint) || (graph.InIntersection(current.ConnectionPoint) && graph.OutIntersection(neighbor)))
+                    {
+                        currentSpeed = lastSpeed;
+                    }
+                    else if (graph.OutIntersection(current.ConnectionPoint) && graph.InAisle(neighbor))
+                    {
+                        currentSpeed = Mathf.Min(speed, layerOfNeighbor.SpeedLimit());
+                    }
+                    else if (graph.OutIntersection(current.ConnectionPoint) && graph.NearIntersection(neighbor))
+                    {
+                        currentSpeed = Mathf.Min(speed, layerOfNeighbor.SpeedLimit());
+                        float deaccelerationFactor = layerOfNeighbor.DeaccelerationFactor();
+                        currentSpeed *= deaccelerationFactor;
                     }
 
-                    maxSpeed *= currentSpeedFactor;
-                    float timeCost = distance / maxSpeed;
+                    float timeCost = distance / currentSpeed;
                     float tentative_gscore = g_score[current] + timeCost;
 
                     if (tentative_gscore < g_score[neighborNode])
                     {
-                        previous[neighborNode] = current;
+                        previous[neighborNode] = new Tuple<RoutePoint, float>(current, currentSpeed);
                         g_score[neighborNode] = tentative_gscore;
                         f_score[neighborNode] = g_score[neighborNode] + h_score[neighborNode];
-
+                        
                         if (!openSet.Contains(neighborNode))
                         {
                             openSet.Add(neighborNode);
                         }
+                        lastSpeed = currentSpeed;
                     }
                 }
             }
 
             UnityEngine.Debug.Log("No path found");
-            return new List<ConnectionPoint>();
+            return new List<Tuple<ConnectionPoint, float>>();
         }
 
-        private static List<ConnectionPoint> GetPath(Dictionary<RoutePoint, RoutePoint> previous, RoutePoint startPosition, RoutePoint endPosition)
+        private static List<Tuple<ConnectionPoint, float>> GetPath(Dictionary<RoutePoint, Tuple<RoutePoint, float>> previous, RoutePoint startPosition, RoutePoint endPosition, float speed)
         {
-            List<ConnectionPoint> path = new List<ConnectionPoint>();
+            List<Tuple<ConnectionPoint, float>> path = new List<Tuple<ConnectionPoint, float>>();
 
             RoutePoint current = endPosition;
+            float currentSpeed = 0f;
             while (current != null && current != startPosition)
             {
-                path.Add(current.ConnectionPoint);
-                current = previous[current];
+                path.Add(new Tuple<ConnectionPoint, float>(current.ConnectionPoint, currentSpeed));
+                current = previous[current].Item1;
+                currentSpeed = previous[current].Item2;
             }
 
-            path.Add(startPosition.ConnectionPoint);
+            path.Add(new Tuple<ConnectionPoint, float>(startPosition.ConnectionPoint, speed));
             path.Reverse();
             path.RemoveAt(path.Count - 1);
             
             List<string> pathIds = new List<string>();
+            List<float> speeds = new List<float>();
 
-            foreach (ConnectionPoint connectionPoint in path)
+            foreach (Tuple<ConnectionPoint, float> connectionPoint in path)
             {
-                pathIds.Add(connectionPoint.Id);
+                pathIds.Add(connectionPoint.Item1.Id);
+                speeds.Add(connectionPoint.Item2);
             }
             UnityEngine.Debug.Log("Path: " + string.Join(" -> ", pathIds.ToArray()));
+            // UnityEngine.Debug.Log("Speeds: " + string.Join(" -> ", speeds.ToArray()));
 
             return path;
         }

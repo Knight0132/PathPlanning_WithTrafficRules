@@ -120,19 +120,53 @@ namespace Map {
             return null;
         }
 
-        public bool NearIntersection(ConnectionPoint connectionPoint, bool sequence = true) {
-            CellSpace cellSpace = indoorSpace.GetCellSpaceFromConnectionPoint(connectionPoint, sequence);
-            Layer layer = indoorSpace.GetLayerFromCellSpaceId(cellSpace.Id);
-            if (layer.IsIntersection()) {
+        public bool NearIntersection(ConnectionPoint connectionPoint, bool sequence = false)
+        {
+            CellSpace nextCellSpace = indoorSpace.GetCellSpaceFromConnectionPoint(connectionPoint, sequence);
+            CellSpace pastCellSpace = indoorSpace.GetCellSpaceFromConnectionPoint(connectionPoint, !sequence);
+            Layer nextLayer = indoorSpace.GetLayerFromCellSpaceId(nextCellSpace.Id);
+            Layer pastLayer = indoorSpace.GetLayerFromCellSpaceId(pastCellSpace.Id);
+            if (!(pastLayer.IsIntersection()) && nextLayer.IsIntersection())
+            {
                 return true;
             }
             return false;
         }
 
-        public bool InIntersection(ConnectionPoint connectionPoint, bool sequence = false) {
-            CellSpace cellSpace = indoorSpace.GetCellSpaceFromConnectionPoint(connectionPoint, sequence);
-            Layer layer = indoorSpace.GetLayerFromCellSpaceId(cellSpace.Id);
-            if (layer.IsIntersection()) {
+        public bool InIntersection(ConnectionPoint connectionPoint, bool sequence = false)
+        {
+            CellSpace nextCellSpace = indoorSpace.GetCellSpaceFromConnectionPoint(connectionPoint, sequence);
+            CellSpace pastCellSpace = indoorSpace.GetCellSpaceFromConnectionPoint(connectionPoint, !sequence);
+            Layer nextLayer = indoorSpace.GetLayerFromCellSpaceId(nextCellSpace.Id);
+            Layer pastLayer = indoorSpace.GetLayerFromCellSpaceId(pastCellSpace.Id);
+            if (pastLayer.IsIntersection() && nextLayer.IsIntersection())
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool OutIntersection(ConnectionPoint connectionPoint, bool sequence = false)
+        {
+            CellSpace nextCellSpace = indoorSpace.GetCellSpaceFromConnectionPoint(connectionPoint, sequence);
+            CellSpace pastCellSpace = indoorSpace.GetCellSpaceFromConnectionPoint(connectionPoint, !sequence);
+            Layer nextLayer = indoorSpace.GetLayerFromCellSpaceId(nextCellSpace.Id);
+            Layer pastLayer = indoorSpace.GetLayerFromCellSpaceId(pastCellSpace.Id);
+            if (pastLayer.IsIntersection() && !(nextLayer.IsIntersection()))
+            {
+                return true;
+            }
+            return false;
+        }
+        
+        public bool InAisle(ConnectionPoint connectionPoint, bool sequence = false)
+        {
+            CellSpace nextCellSpace = indoorSpace.GetCellSpaceFromConnectionPoint(connectionPoint, sequence);
+            CellSpace pastCellSpace = indoorSpace.GetCellSpaceFromConnectionPoint(connectionPoint, !sequence);
+            Layer nextLayer = indoorSpace.GetLayerFromCellSpaceId(nextCellSpace.Id);
+            Layer pastLayer = indoorSpace.GetLayerFromCellSpaceId(pastCellSpace.Id);
+            if (pastLayer.IsAisle() && nextLayer.IsAisle())
+            {
                 return true;
             }
             return false;

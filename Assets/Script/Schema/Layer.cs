@@ -27,10 +27,28 @@ namespace Map {
             return Convert.ToSingle(this.Properties["speed"]);
         }
 
+        public float DeaccelerationFactor()
+        {
+            if (this.Properties.ContainsKey("deaccelerationFactor"))
+            {
+                return Convert.ToSingle(this.Properties["deaccelerationFactor"]);
+            }
+            return 1f;
+        }
+
 
         public bool IsIntersection()
         {
             if (this.Properties["type"].Equals("intersection"))
+            {
+                return true;
+            }
+            return false;
+        }
+        
+        public bool IsAisle()
+        {
+            if (this.Properties["type"].Equals("aisle"))
             {
                 return true;
             }

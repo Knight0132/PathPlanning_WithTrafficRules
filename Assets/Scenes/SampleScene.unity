@@ -371,7 +371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapLoader: {fileID: 2025342815}
   targetIndicator: {fileID: 5046057382194650421, guid: a2cba8e53abde44258ea6725fabbb9c2, type: 3}
-  currentSpeed: 3
+  defaultSpeed: 5
   selectedAlgorithm: 0
 --- !u!1001 &1399262188
 PrefabInstance:

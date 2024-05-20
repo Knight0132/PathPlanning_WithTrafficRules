@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,13 +11,13 @@ namespace Robot {
     {
         public MapLoader mapLoader;
         public Transform targetIndicator;
-        public float currentSpeed = 5.0f;
+        public float defaultSpeed = 5.0f;
         public SearchAlgorithm selectedAlgorithm = SearchAlgorithm.Astar_Traffic_Completed;
 
         private Vector3 currentTarget;
         private int pathIndex = 0;
         private bool isMoving = false;
-        private List<ConnectionPoint> path = new List<ConnectionPoint>();
+        private List<Tuple<ConnectionPoint, float>> path = new List<Tuple<ConnectionPoint, float>>();
         private CellSpace cellSpace;
         private RoutePoint routePoint;
         private ConnectionPoint connectionPoint;
@@ -25,6 +26,7 @@ namespace Robot {
         private IndoorSpace indoorSpace;
         private float startTime;
         private float elapsedTime;
+        private float currentSpeed;
 
 
 
@@ -65,7 +67,7 @@ namespace Robot {
             RoutePoint endPosition = graph.GetRoutePointFromCoordinate(currentTarget, true);
             if (startPosition != null && endPosition != null)
             {
-                path = PathPlanner.FindPath(selectedAlgorithm, graph, startPosition, endPosition, currentSpeed);
+                path = PathPlanner.FindPath(selectedAlgorithm, graph, startPosition, endPosition, defaultSpeed);
                 mapLoader.mapVisualizer.VisualizePath(indoorSpace, path);
                 isMoving = true;
                 pathIndex = 0;
@@ -81,34 +83,10 @@ namespace Robot {
         {
             if (pathIndex < path.Count)
             {
-                Vector3 targetPosition = graph.GetCoordinatesFromConnectionPoint(path[pathIndex]);
-                CellSpace targetCellSpace = this.indoorSpace.GetCellSpaceFromConnectionPoint(path[pathIndex], false);
-                Layer targetLayer = graph.GetLayerFromConnectionPoint(path[pathIndex], false);
-
-                if (selectedAlgorithm == SearchAlgorithm.Astar_Traffic_Completed)
-                {
-                    currentSpeed = targetLayer.SpeedLimit();
-                    if (graph.NearIntersection(path[pathIndex]))
-                    {
-                        currentSpeed *= 0.5f;
-                        if (graph.InIntersection(path[pathIndex]))
-                        {
-                            currentSpeed *= 2.0f;
-                        }
-                    }
-                }
-                else if (selectedAlgorithm == SearchAlgorithm.Astar_Traffic_Developing)
-                {
-                    currentSpeed = targetLayer.SpeedLimit();
-                }
-                else if (selectedAlgorithm == SearchAlgorithm.Astar_Basic)
-                {
-                    currentSpeed = currentSpeed;
-                }
-                else
-                {
-                    Debug.LogError("Invalid algorithm selected.");
-                }
+                Vector3 targetPosition = graph.GetCoordinatesFromConnectionPoint(path[pathIndex].Item1);
+                CellSpace targetCellSpace = this.indoorSpace.GetCellSpaceFromConnectionPoint(path[pathIndex].Item1, false);
+                Layer targetLayer = graph.GetLayerFromConnectionPoint(path[pathIndex].Item1, false);
+                float currentSpeed = path[pathIndex].Item2;
 
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * currentSpeed);
                 if (Vector3.Distance(transform.position, targetPosition) < 0.1f)

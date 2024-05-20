@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections.Generic;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
@@ -63,16 +64,16 @@ public class MapVisualizer : MonoBehaviour
         currentEndPointObject.name = "End Point";
     }
 
-    public void VisualizePath(IndoorSpace indoorSpace, List<ConnectionPoint> path)
+    public void VisualizePath(IndoorSpace indoorSpace, List<Tuple<ConnectionPoint, float>> path)
     {
         ClearPath();
         int iters = 0;
-        foreach (var connectionPoint in path)
+        foreach (Tuple<ConnectionPoint, float> connectionPoint in path)
         {
             bool sequence = true;
             iters ++;
             float scaleAdjustment = 0.1f;
-            CellSpace cellSpace = indoorSpace.GetCellSpaceFromConnectionPoint(connectionPoint, sequence);
+            CellSpace cellSpace = indoorSpace.GetCellSpaceFromConnectionPoint(connectionPoint.Item1, sequence);
             Point point = (Point)cellSpace.Node;
             GameObject pathPoint = Instantiate(planePrefab, new Vector3((float)point.X, 0.02f, (float)point.Y), Quaternion.identity, transform);
             pathPoint.name = "Path";
