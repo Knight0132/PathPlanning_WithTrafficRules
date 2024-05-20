@@ -62,7 +62,6 @@ namespace PathPlanning
                     bool sequence = false;
                     RoutePoint neighborNode = graph.GetRoutePointFormConnectionPoint(neighbor);
                     Layer layerOfNeighbor = graph.GetLayerFromConnectionPoint(neighbor, sequence);
-                    Layer layerCurrent = graph.GetLayerFromConnectionPoint(current.ConnectionPoint, sequence);
                     
                     float currentSpeed = speed;
                     
