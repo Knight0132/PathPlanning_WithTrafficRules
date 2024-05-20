@@ -66,30 +66,8 @@ namespace PathPlanning
                     float currentSpeed = speed;
                     
                     float distance = (float)current.ConnectionPoint.Point.Distance(neighbor.Point);
-
-                    if (graph.InAisle(current.ConnectionPoint) && graph.InAisle(neighbor))
-                    {
-                        currentSpeed = Mathf.Min(speed, layerOfNeighbor.SpeedLimit());
-                    }
-                    else if (graph.InAisle(current.ConnectionPoint) && graph.NearIntersection(neighbor))
-                    {
-                        float deaccelerationFactor = layerOfNeighbor.DeaccelerationFactor();
-                        currentSpeed *= deaccelerationFactor;
-                    }
-                    else if (graph.NearIntersection(current.ConnectionPoint) || (graph.InIntersection(current.ConnectionPoint) && graph.OutIntersection(neighbor)))
-                    {
-                        currentSpeed = lastSpeed;
-                    }
-                    else if (graph.OutIntersection(current.ConnectionPoint) && graph.InAisle(neighbor))
-                    {
-                        currentSpeed = Mathf.Min(speed, layerOfNeighbor.SpeedLimit());
-                    }
-                    else if (graph.OutIntersection(current.ConnectionPoint) && graph.NearIntersection(neighbor))
-                    {
-                        currentSpeed = Mathf.Min(speed, layerOfNeighbor.SpeedLimit());
-                        float deaccelerationFactor = layerOfNeighbor.DeaccelerationFactor();
-                        currentSpeed *= deaccelerationFactor;
-                    }
+                    
+                    currentSpeed = ModifySpeed(graph, current.ConnectionPoint, neighbor, speed, currentSpeed, lastSpeed, layerOfNeighbor);
 
                     float timeCost = distance / currentSpeed;
                     float tentative_gscore = g_score[current] + timeCost;
@@ -139,7 +117,7 @@ namespace PathPlanning
                 speeds.Add(connectionPoint.Item2);
             }
             UnityEngine.Debug.Log("Path: " + string.Join(" -> ", pathIds.ToArray()));
-            // UnityEngine.Debug.Log("Speeds: " + string.Join(" -> ", speeds.ToArray()));
+            UnityEngine.Debug.Log("Speeds: " + string.Join(" -> ", speeds.ToArray()));
 
             return path;
         }
@@ -159,6 +137,37 @@ namespace PathPlanning
             float timeCost = distance / speed;
 
             return timeCost;
+        }
+
+        private static float ModifySpeed(Graph graph, ConnectionPoint current, ConnectionPoint neighbor, float defaultSpeed, float currentSpeed, float lastSpeed, Layer layerOfNeighbor)
+        {
+            if (graph.InAisle(current) && graph.InAisle(neighbor))
+            {
+                return currentSpeed = Mathf.Min(defaultSpeed, layerOfNeighbor.SpeedLimit());
+            }
+            else if (graph.InAisle(current) && graph.NearIntersection(neighbor))
+            {
+                float deaccelerationFactor = layerOfNeighbor.DeaccelerationFactor();
+                return currentSpeed *= deaccelerationFactor;
+            }
+            else if (graph.NearIntersection(current) || (graph.InIntersection(current) && graph.OutIntersection(neighbor)))
+            {
+                return currentSpeed = lastSpeed;
+            }
+            else if (graph.OutIntersection(current) && graph.InAisle(neighbor))
+            {
+                return currentSpeed = Mathf.Min(defaultSpeed, layerOfNeighbor.SpeedLimit());
+            }
+            else if (graph.OutIntersection(current) && graph.NearIntersection(neighbor))
+            {
+                currentSpeed = Mathf.Min(defaultSpeed, layerOfNeighbor.SpeedLimit());
+                float deaccelerationFactor = layerOfNeighbor.DeaccelerationFactor();
+                return currentSpeed *= deaccelerationFactor;
+            }
+            else
+            {
+                return currentSpeed = defaultSpeed;
+            }
         }
     }
 }
