@@ -7,8 +7,8 @@ Platform: **Unity3D**
 The compiler version is **2021.3.32f1c1**.
 
 ## Algorithms
-In this project, we use the normal A* algorithm, and the improved A* algorithm to test our indoor map data structure. 
-For the normal A* algorithm, we use distance as the cost to calculate the function g(x). And the h(x) function is the Euclid distance function.
+In this project, we use the tradictional A* algorithm, and the improved A* algorithm to test our indoor map data structure. 
+For the tradictional A* algorithm, we use distance as the cost to calculate the function g(x). And the h(x) function is the Euclid distance function.
 But in the improved A* algorithm, we use the time as the cost to calculate the functions. We set the speed as the input parameter.
 When selecting the neighbors, the algorithm will detect whether the neighbor is intersection, if it is, the speed will multiply a deacceleration factor. 
 And we do this only for compatibility with the newly proposed indoor map data structure which contains the traffic rules information.
