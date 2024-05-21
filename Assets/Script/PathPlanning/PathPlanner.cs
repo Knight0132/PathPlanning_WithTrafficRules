@@ -8,7 +8,8 @@ namespace PathPlanning
 {
     public enum SearchAlgorithm
     {
-        Astar_Basic,
+        Astar_Basic_Distance,
+        Astar_Basic_Time,
         Astar_Traffic_Completed
     }
 
@@ -25,8 +26,10 @@ namespace PathPlanning
             {
                 case SearchAlgorithm.Astar_Traffic_Completed:
                     return Astar_Traffic_Completed.AstarAlgorithm_TC(graph, startPoint, endPoint, speed);
-                case SearchAlgorithm.Astar_Basic:
-                    return Astar_Basic.AstarAlgorithm_Basic(graph, startPoint, endPoint, speed);
+                case SearchAlgorithm.Astar_Basic_Distance:
+                    return Astar_Basic_Distance.AstarAlgorithm_Basic_Distance(graph, startPoint, endPoint, speed);
+                case SearchAlgorithm.Astar_Basic_Time:
+                    return Astar_Basic_Time.AstarAlgorithm_Basic_Time(graph, startPoint, endPoint, speed);
                 default:
                     return null;
             }
