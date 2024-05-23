@@ -371,7 +371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapLoader: {fileID: 2025342815}
   targetIndicator: {fileID: 5046057382194650421, guid: a2cba8e53abde44258ea6725fabbb9c2, type: 3}
-  defaultSpeed: 3
+  defaultSpeed: 5
   selectedAlgorithm: 1
 --- !u!1001 &1399262188
 PrefabInstance:
@@ -478,8 +478,8 @@ MonoBehaviour:
   cameraPositionY: 10
   width: 20
   length: 25
-  startPoint: {x: 16.23, y: 0, z: 0.8273}
-  endPoint: {x: 10.23, y: 0, z: 8.123}
+  startPoint: {x: 16.2312, y: 0, z: 0.8273}
+  endPoint: {x: 22.283, y: 0, z: 19.234}
 --- !u!4 &2025342816
 Transform:
   m_ObjectHideFlags: 0
